@@ -110,9 +110,6 @@ a:hover {
 .modal-body > ul > li {
     list-style-type: circle;
 }
-.modal-header.over-header{
-    border-bottom: none;
-}
 .choose-btn {
     width: 100%;
     height: 50px;
