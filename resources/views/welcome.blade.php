@@ -296,6 +296,7 @@
                     vm.reply = "";
                     charIndex = -1;
                     stringLength = 0;
+                    vm.list = null;
                     if (vm.flag  == 1) {
                         vm.content = "Game Over! Please refresh the current page and try it again";
                         vm.over = true;
