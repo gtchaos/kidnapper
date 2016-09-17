@@ -1,0 +1,140 @@
+@import "Lato.css";
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    display: table;
+    font-weight: 100;
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+}
+[v-cloak] {
+    display: none;
+}
+a{
+    color:#000;
+}
+a:hover {
+    color:#ec0fea;;
+    text-decoration: none;
+}
+.list-group-item a:hover{
+    background: #eeeeee;
+}
+#introduction p{
+    padding: 0 5px;
+}
+.team-name {
+    height:56px;
+    font-size:16px;
+    line-height: inherit;
+}
+.title {
+    font-size: 66px;
+    margin-bottom: 30px;
+}
+.footer {
+    padding-top:60px;
+    padding-bottom:40px;
+    font-size: 12px;
+}
+.footer .contact {
+    font-size: 18px;
+}
+.title.profile-title {
+    margin-bottom: 60px;
+}
+.name-area {
+    margin: 10px 0 10px;
+    line-height: 60px;
+}
+.new {
+    font-size:60px;
+}
+.name {
+    color:red;
+    font-size:20px;
+    font-weight:700;
+}
+.score-area {
+    padding:30px 0;
+}
+.score, .time {
+    margin-top: 20px;
+    color:red;
+    font-size:20px;
+}
+#myContent {
+    background:#666666;
+    border-radius: 4px;
+}
+#myContent, #myContent #blink{
+    width:100%;
+    height:200px;
+    padding:20px;
+    font-size: 20px;
+    color: #00FF00;
+}
+#blink{
+    display:inline;
+}
+.profile-submit {
+    padding: 0 20px;
+}
+.list-group-item {
+    padding:0;
+}
+.select {
+    display: block;
+    padding: 20px 15px;
+    cursor: pointer;
+    white-space: normal;
+}
+.attention {
+    font-size: 30px;
+    font-weight: 600;
+}
+.shoot-footer {
+    border-top: none!important;
+}
+.over-body {
+    line-height: 50px;
+    font-size: 30px;
+    padding: 10px;
+}
+
+.modal-body > ul > li {
+    list-style-type: circle;
+}
+.modal-header.over-header{
+    border-bottom: none;
+}
+.choose-btn {
+    width: 100%;
+    height: 50px;
+}
+.footer-align {
+    text-align: center!important;
+}
+.footer-align .btn {
+    padding: 10px 15px;
+}
+.footer-align .left {
+    margin-right: 50px;
+}
+
+@media (max-width: 767px) {
+    .title {
+        font-size: 28px;
+    }
+    .name-area {
+        line-height: 16px;
+    }
+    .name, .new {
+        font-size: 14px;
+    }
+}
