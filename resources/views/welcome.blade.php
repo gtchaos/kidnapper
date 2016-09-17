@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-md-6">
             <div class="name-area pull-left">
-                Team Name : &nbsp;<span class="name">{{ $teamName }}</span>
+                Team : &nbsp;<span class="name">{{ $teamName }}</span>
             </div>
         </div>
         <div class="col-md-6">
@@ -22,7 +22,7 @@
     </div>
     <template id='dialog-template'>
         <div class="col-md-5">
-
+            <p class="role">Negotiator's Choices: <i class="fa fa-hand-o-down" aria-hidden="true"></i></p>
             <ul class="list-group" id="team">
                 <li class="list-group-item" v-for="(index, dialog) in list">
                     <a id="selectA" class="select" v-on:click="updateDialog(dialog)">
@@ -37,7 +37,7 @@
         {{--</div>--}}
         <div class="col-md-2">
             <div class="text-center score-area">
-                Your Scores: <br>
+                Your Coins: <br>
                 <p class="score"><span>@{{ score }}</span></p>
                 Count Down: <br>
                 <p class="time"><span> @{{ time }}"</span></p>
@@ -46,6 +46,7 @@
 
         </div>
         <div class="col-md-5">
+            <p class="role">Kidnapper's Reply:</p>
             <div id="myContent"></div>
             <p id="kidnapper" style="display:none"> @{{ reply }} </p>
         </div>
@@ -59,15 +60,15 @@
             </div>
             <div slot="modal-body" class="modal-body">
                 <ul>
-                    <li>If you give up saving your partner and go away,you loose 100 marks.
+                    <li>If you give up saving your partner and go away,you loose 200 coins.
                     </li>
                     <li>Or you decide to take out all the treasures to exchange your partner, you will have nothing
-                        right now, but get 0 mark. (No treasure, 0 mark)
+                        right now, but get 0 coin. (No treasure, 0 coins)
                     </li>
                     <li>But you have only one shot left!
                     </li>
-                    <li>The bullet rate is 50%. If you shoot correctly,you get 100 marks. If you don’t shoot correctly,
-                        the kidnapper will kill your partner directly, you lose 200 marks.
+                    <li>The bullet rate is 50%. If you shoot correctly,you get 400 coins. If you don’t shoot correctly,
+                        the kidnapper will kill your partner directly, you lose 400 coins.
                     </li>
                 </ul>
 
@@ -81,9 +82,9 @@
         <modal title="game over" small :show.sync="over" backdrop="false" effect="fade" width="400">
             <div slot="modal-header" class="modal-header over-header">
                 <button type="button"  onclick="responsiveVoice.cancel();"  value="Play" class="close" @click="over = false"><span>×</span></button>
-                <h4 class="modal-title">
+                <h5 class="modal-title">
                     The Game Results
-                </h4>
+                </h5>
             </div>
             <div slot="modal-body" class="modal-body">
                 <p class="text-center over-body">
@@ -91,7 +92,7 @@
                 </p>
             </div>
             <div slot="modal-footer" class="modal-footer footer-align">
-                <p>Your Score: &nbsp;<span class="score">@{{ score }}</span></p>
+                <p>Your Current Coins: &nbsp;<span class="score">@{{ score }}</span></p>
             </div>
         </modal>
 
@@ -104,13 +105,13 @@
             <div slot="modal-body" class="modal-body">
                 <ul>
                     <li> You have only one shot left!</li>
-                    <li> The bullet rate is 50%. If you shoot correctly, you get 100 marks. If you don’t shoot
-                        correctly, the kidnapper will kill your partner directly, you will lose 200 marks.
+                    <li> The bullet rate is 50%. If you shoot correctly, you get 400 coins. If you don’t shoot
+                        correctly, the kidnapper will kill your partner directly, you will lose 400 coins.
                     </li>
-                    <li> Or you give up saving your partner and go away, you loose 100 marks.
+                    <li> Or you give up saving your partner and go away, you loose 200 coins.
                     </li>
                     <li> Or you decide to take out all the treasures to exchange your partner, you will have nothing
-                        right now, but get 0 mark.
+                        right now, but get 0 coin.
                     </li>
                 </ul>
             </div>
@@ -123,9 +124,9 @@
 
         <modal title="Choose" small :show.sync="choose" backdrop="false" effect="fade" width="400">
             <div slot="modal-header" class="modal-header over-header">
-                <h4 class="modal-title">
+                <h5 class="modal-title">
                     Choose Up Or Down
-                </h4>
+                </h5>
             </div>
             <div slot="modal-body" class="modal-body">
                 <p class="text-center">
@@ -135,20 +136,20 @@
                 </p>
                 <p class="text-center">
                     <button class="btn btn-success choose-btn" @click="surrender">
-                    Take out all the treasures to exchange
+                    Take out all treasures to exchange
                     </button>
                 </p>
             </div>
             <div slot="modal-footer" class="modal-footer footer-align">
-                <p>Your Current Score: &nbsp;<span class="score">@{{ score }}</span></p>
+                <p>Your Current Coins: &nbsp;<span class="score">@{{ score }}</span></p>
             </div>
 
         </modal>
         <modal title="keep treasures" small :show.sync="keep" backdrop="false" effect="fade" width="400">
             <div slot="modal-header" class="modal-header over-header">
-                <h4 class="modal-title">
+                <h5 class="modal-title">
                     Keep Treasures
-                </h4>
+                </h5>
             </div>
             <div slot="modal-body" class="modal-body">
                 <p class="text-center">
@@ -163,7 +164,7 @@
                 </p>
             </div>
             <div slot="modal-footer" class="modal-footer footer-align">
-                <p>Your Current Score: &nbsp;<span class="score">@{{ score }}</span></p>
+                <p>Your Current Coins: &nbsp;<span class="score">@{{ score }}</span></p>
             </div>
 
         </modal>
@@ -286,10 +287,9 @@
                 vm.timer = setInterval(function () {
                     vm.time--;
                     if (vm.time == 0) {
-                        clearInterval(vm.timer);
                         recorder.update({id: vm.uid}, {score: -100}).then(function (response) {
                             // 响应成功回调
-                            vm.score = -100;
+                            vm.score += -100;
                             vm.content = "TIME OUT";
                             vm.choose = false;
                             vm.show = false;
@@ -297,6 +297,7 @@
                             vm.keep = false;
                             vm.over = true;
                         });
+                        clearInterval(vm.timer);
                         return false;
                     }
                 }, 1000)
@@ -306,11 +307,15 @@
             methods: {
                 updateDialog: function (dialog) {
                     var vm = this;
+                    if (responsiveVoice.isPlaying()) {
+                        return false;
+                    }
                     speak(dialog.word);
                     //查取绑匪的对话回复
                     vm.reply = "";
                     charIndex = -1;
                     stringLength = 0;
+
                     if (vm.flag  == 1) {
                         vm.content = "Game Over! Please refresh the current page and try it again";
                         vm.over = true;
@@ -319,7 +324,7 @@
                     if (vm.time == 0) {
                         recorder.update({id: vm.uid}, {score: -100}).then(function (response) {
                             // 响应成功回调
-                            vm.score = -100;
+                            vm.score += -100;
                             vm.content = "TIME OUT";
                             vm.flag = 1; //表明比赛已结束
                             vm.over = true;
@@ -361,7 +366,7 @@
                                                     if (vm.status == 2) {
                                                         recorder.update({id: vm.uid}, {score: 400}).then(function (response) {
                                                             // 响应成功回调
-                                                            vm.score = 400;
+                                                            vm.score += 400;
                                                             vm.content = "BIG SUCCESS";
                                                             clearInterval(vm.timer);
                                                             vm.flag = 1; //表明比赛已结束
@@ -377,7 +382,7 @@
                                                     if (vm.status == 4) {
                                                         recorder.update({id: vm.uid}, {score: -200}).then(function (response) {
                                                             // 响应成功回调
-                                                            vm.score = -200;
+                                                            vm.score += -200;
                                                             vm.content = "the kidnapper killed your partner.";
                                                             clearInterval(vm.timer);
                                                             vm.flag = 1; //表明比赛已结束
@@ -387,7 +392,7 @@
                                                     if (vm.status == 5) {
                                                         recorder.update({id: vm.uid}, {score: 0}).then(function (response) {
                                                             // 响应成功回调
-                                                            vm.score = 0;
+                                                            vm.score += 0;
                                                             vm.content = "You have nothing in it";
                                                             clearInterval(vm.timer);
                                                             vm.flag = 1; //表明比赛已结束
@@ -428,7 +433,7 @@
                     vm.keep = false;
                     recorder.update({id: vm.uid}, {score: -200}).then(function (response) {
                         // 响应成功回调
-                        vm.score = -200;
+                        vm.score += -200;
                         vm.content = "You give up";
                         clearInterval(vm.timer);
                         vm.flag = 1; //表明比赛已结束
@@ -439,9 +444,18 @@
                     var vm = this;
                     vm.show = false;
                     vm.choose = false;
-                    recorder.update({id: vm.uid}, {score: 0}).then(function (response) {
+                    var t_score = 0;
+                    if (vm.score > 0) {
+                        t_score = - vm.score;
+                    } else {
+                        vm.content = "You have no more coins! Sorry, you have to choose the other one";
+                        vm.choose = true;
+                        return;
+                    }
+
+                    recorder.update({id: vm.uid}, {score: t_score}).then(function (response) {
                         // 响应成功回调
-                        vm.score = 0;
+                        vm.score += t_score;
                         vm.content = "You have surrendered";
                         clearInterval(vm.timer);
                         vm.flag = 1; //表明比赛已结束
@@ -458,7 +472,7 @@
                     if (Math.random() < 0.5) {
                         recorder.update({id: vm.uid}, {score: -400}).then(function (response) {
                             // 响应成功回调
-                            vm.score = -400;
+                            vm.score += -400;
                             vm.content = "You don’t shoot correctly!";
                             clearInterval(vm.timer);
                             vm.flag = 1; //表明比赛已结束
@@ -467,7 +481,7 @@
                     } else {
                         recorder.update({id: vm.uid}, {score: 200}).then(function (response) {
                             // 响应成功回调
-                            vm.score = 200;
+                            vm.score += 200;
                             vm.content = "Congratulation! you shoot correctly.";
                             clearInterval(vm.timer);
                             vm.flag = 1; //表明比赛已结束

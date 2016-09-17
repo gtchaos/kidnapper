@@ -6,10 +6,14 @@
         <div class="col-md-offset-3 col-md-6">
             <form role="form">
                 <div class="form-group">
+
                     <div class="input-group">
                         <label class="sr-only" for="teamName">Team Name:</label>
                         <input type="text" class="form-control team-name" id="teamName" v-model="name"
                                placeholder="Enter Your Team Name">
+                        <label class="sr-only" for="coins">Team Current Coins:</label>
+                        <input type="text" class="form-control team-name" id="coins" v-model="score"
+                               placeholder="Enter Your Current Coins">
                         <a v-on:click="createTeam" href="#" class="input-group-addon profile-submit">
                             <span>Submit</span>
                         </a>
@@ -74,6 +78,7 @@
             el: 'body',
             data: {
                 name: null,
+                score: 0,
                 showRight: false,
                 showFalse: false,
                 message: null
@@ -83,7 +88,7 @@
                     e.preventDefault();
                     var vm = this;
                     if (vm.name) {
-                        vm.$http.post("/profile", {name: vm.name})
+                        vm.$http.post("/profile", {name: vm.name, score: vm.score})
                                 .then(function (response) {
 
                                     if (response.body.ret == 200) {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Group;
 use Cache;
+use DB;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -85,9 +86,9 @@ class ScoreController extends Controller
     public function update(Request $request, $id)
     {
         $score = $request->get("score");
-        $name = Cookie::get('name');
+
         try {
-            \App\Group::where('name', $name)->update(['score' => $score]);
+            DB::update("update groups set score = (score + ?) where id = ?", [$score, $id]);
             return \Response::json([
                 'ret' => 200,
                 'retMsg' => 'update success'
