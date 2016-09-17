@@ -42,7 +42,10 @@ Route::get('api/dialog/{id}', function($id) {
         $ret['reply'] = $reply;
         $ret['status'] = $relation['status'];
 
-    }   
+    }  else {
+        $ret['reply'] = "";
+        $ret['status'] = 404;
+    }
     return $ret;
 });
 
