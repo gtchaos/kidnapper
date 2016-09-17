@@ -1,6 +1,6 @@
 @extends('main')
 @section('content')
-    <h1 class="text-center title">Negotiate With The Kidnapper</h1>
+    <h1 class="text-center title" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">Negotiate With The Kidnapper</h1>
     <div class="row">
         <div class="col-md-6">
             <div class="name-area pull-left">
@@ -80,7 +80,7 @@
 
         <modal title="game over" small :show.sync="over" backdrop="false" effect="fade" width="400">
             <div slot="modal-header" class="modal-header over-header">
-                <button type="button" class="close" @click="over = false"><span>×</span></button>
+                <button type="button"  onclick="responsiveVoice.cancel();"  value="Play" class="close" @click="over = false"><span>×</span></button>
                 <h4 class="modal-title">
                     The Game Results
                 </h4>
@@ -169,11 +169,24 @@
         </modal>
 
     </template>
+
 @endsection
 
 @section('scripts')
     <script type="text/javascript">
         Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('#token').getAttribute('content');
+        // speaker
+        function speak(content, voice){
+            if(voice == 1) {
+                responsiveVoice.setDefaultVoice("US English Male");
+            } else {
+                responsiveVoice.setDefaultVoice("US English Female");
+            }
+            setTimeout(function(){
+                responsiveVoice.speak(content);
+            }, 100);
+        }
+
         var charIndex = -1;
         var stringLength = 0;
         var inputText;
@@ -253,6 +266,7 @@
             },
             created: function () {
                 var vm = this;
+
                 // 初次加载页面数据
                 this.$http.get('dialog/0').then(function (response) {
                     // 响应成功回调
@@ -292,11 +306,11 @@
             methods: {
                 updateDialog: function (dialog) {
                     var vm = this;
+                    speak(dialog.word);
                     //查取绑匪的对话回复
                     vm.reply = "";
                     charIndex = -1;
                     stringLength = 0;
-                    vm.list = null;
                     if (vm.flag  == 1) {
                         vm.content = "Game Over! Please refresh the current page and try it again";
                         vm.over = true;
@@ -317,9 +331,18 @@
                         vm.reply = response.body.reply;
                         if (vm.reply) {
                             setTimeout(function () {
-                                document.getElementById('myContent').innerHTML = '';
-                                writeContent(true);
-                            }, 100);
+
+                                var st = setInterval(function() {
+                                    if(!responsiveVoice.isPlaying()){
+                                        speak(vm.reply, 1);
+                                        setTimeout(function(){
+                                            document.getElementById('myContent').innerHTML = '';
+                                            writeContent(true);
+                                        }, 200);
+                                        clearInterval(st);
+                                    }
+                                },500);
+                            }, 3000);
                         }
 
                         st = response.body.status;
@@ -331,7 +354,7 @@
                                 negotiator.get({id: dialog.word_id}).then(function (response) {
                                     vm.list = response.body;
                                 });
-                            }, 2000);
+                            }, 1000);
                         }
                         // st = 1 选择 treasure or partner
                         if (st == 1) {
