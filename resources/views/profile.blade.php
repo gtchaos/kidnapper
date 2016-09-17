@@ -78,7 +78,7 @@
             el: 'body',
             data: {
                 name: null,
-                score: 0,
+                score: null,
                 showRight: false,
                 showFalse: false,
                 message: null
@@ -87,6 +87,11 @@
                 createTeam: function (e) {
                     e.preventDefault();
                     var vm = this;
+                    if(isNaN(vm.score)){
+                        vm.message = 'Oops.. please input a legal number';
+                        vm.showFalse = true;
+                        return;
+                    }
                     if (vm.name) {
                         vm.$http.post("/profile", {name: vm.name, score: vm.score})
                                 .then(function (response) {
