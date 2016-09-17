@@ -36,6 +36,7 @@ a:hover {
 .title {
     font-size: 66px;
     margin-bottom: 30px;
+    font-weight: 700;
 }
 .footer {
     padding-top:60px;

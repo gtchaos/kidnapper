@@ -87,9 +87,7 @@ class ScoreController extends Controller
         $score = $request->get("score");
         $name = Cookie::get('name');
         try {
-            if ($name && $score) {
-                \App\Group::where('name', $name)->update(['score' => $score]);
-            }
+            \App\Group::where('name', $name)->update(['score' => $score]);
             return \Response::json([
                 'ret' => 200,
                 'retMsg' => 'update success'

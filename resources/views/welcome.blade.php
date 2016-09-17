@@ -40,7 +40,7 @@
                 Your Scores: <br>
                 <p class="score"><span>@{{ score }}</span></p>
                 Count Down: <br>
-                <p class="time"><span> @{{ time }}</span></p>
+                <p class="time"><span> @{{ time }}"</span></p>
             </div>
 
 
@@ -237,18 +237,17 @@
                 return {
                     uid: 0,
                     list: [],
+                    timer: null,
                     reply: "",
-                    time: 120,
+                    time: 10,
                     score: 0,
+                    content: "",
                     status: 0,
                     show: false,
-                    over: false,
                     shoot: false,
-                    congratulation: false,
-                    killed: false,
                     choose: false,
                     keep: false,
-                    content: ""
+                    over: false
                 }
             },
             created: function () {
@@ -269,18 +268,22 @@
                     // 响应错误回调
                 });
                 // 2分钟倒计时开始
-                var t = setInterval(function () {
+                vm.timer = setInterval(function () {
+                    vm.time--;
                     if (vm.time == 0) {
-                        clearInterval(t);
+                        clearInterval(vm.timer);
                         recorder.update({id: vm.uid}, {score: -100}).then(function (response) {
                             // 响应成功回调
                             vm.score = -100;
                             vm.content = "TIME OUT";
+                            vm.choose = false;
+                            vm.show = false;
+                            vm.shoot = false;
+                            vm.keep = false;
                             vm.over = true;
                         });
                         return false;
                     }
-                    vm.time--;
                 }, 1000)
 
 
@@ -292,7 +295,7 @@
                     vm.reply = "";
                     charIndex = -1;
                     stringLength = 0;
-                    if (!vm.time) {
+                    if (vm.time == 0) {
                         recorder.update({id: vm.uid}, {score: -100}).then(function (response) {
                             // 响应成功回调
                             vm.score = -100;
@@ -332,6 +335,7 @@
                                 // 响应成功回调
                                 vm.score = 200;
                                 vm.content = "BIG SUCCESS";
+                                clearInterval(vm.timer);
                                 vm.over = true;
                             });
                         }
@@ -345,6 +349,7 @@
                                 // 响应成功回调
                                 vm.score = -200;
                                 vm.content = "the kidnapper killed your partner.";
+                                clearInterval(vm.timer);
                                 vm.over = true;
                             });
                         }
@@ -353,6 +358,7 @@
                                 // 响应成功回调
                                 vm.score = 0;
                                 vm.content = "You have nothing in it";
+                                clearInterval(vm.timer);
                                 vm.over = true;
                             });
                         }
@@ -378,6 +384,7 @@
                         // 响应成功回调
                         vm.score = -100;
                         vm.content = "You give up";
+                        clearInterval(vm.timer);
                         vm.over = true;
                     });
                 },
@@ -389,12 +396,10 @@
                         // 响应成功回调
                         vm.score = 0;
                         vm.content = "You have surrendered";
+                        clearInterval(vm.timer);
                         vm.over = true;
+
                     });
-                    setTimeout(function () {
-                        a = "{{URL::to("dialog")}}";
-                        window.location.href = a;
-                    }, 3000);
 
                 },
                 shootKidnapper: function () {
@@ -407,14 +412,15 @@
                             // 响应成功回调
                             vm.score = -100;
                             vm.content = "You don’t shoot correctly!";
+                            clearInterval(vm.timer);
                             vm.over = true;
                         });
-                        vm.over = true;
                     } else {
                         recorder.update({id: vm.uid}, {score: 200}).then(function (response) {
                             // 响应成功回调
                             vm.score = 200;
-                            vm.content = "Congratulation! you shoot correctly."
+                            vm.content = "Congratulation! you shoot correctly.";
+                            clearInterval(vm.timer);
                             vm.over = true;
                         });
 
