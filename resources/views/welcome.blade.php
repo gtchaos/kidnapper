@@ -236,6 +236,7 @@
             data: function () {
                 return {
                     uid: 0,
+                    flag: 0,
                     list: [],
                     timer: null,
                     reply: "",
@@ -295,11 +296,17 @@
                     vm.reply = "";
                     charIndex = -1;
                     stringLength = 0;
+                    if (vm.flag  == 1) {
+                        vm.content = "Game Over! Please refresh the current page and try it again";
+                        vm.over = true;
+                        return false;
+                    }
                     if (vm.time == 0) {
                         recorder.update({id: vm.uid}, {score: -100}).then(function (response) {
                             // 响应成功回调
                             vm.score = -100;
                             vm.content = "TIME OUT";
+                            vm.flag = 1; //表明比赛已结束
                             vm.over = true;
                         });
 
@@ -336,7 +343,9 @@
                                 vm.score = 200;
                                 vm.content = "BIG SUCCESS";
                                 clearInterval(vm.timer);
+                                vm.flag = 1; //表明比赛已结束
                                 vm.over = true;
+
                             });
                         }
                         // st = 3 shoot or not
@@ -350,6 +359,7 @@
                                 vm.score = -200;
                                 vm.content = "the kidnapper killed your partner.";
                                 clearInterval(vm.timer);
+                                vm.flag = 1; //表明比赛已结束
                                 vm.over = true;
                             });
                         }
@@ -359,6 +369,7 @@
                                 vm.score = 0;
                                 vm.content = "You have nothing in it";
                                 clearInterval(vm.timer);
+                                vm.flag = 1; //表明比赛已结束
                                 vm.over = true;
                             });
                         }
@@ -385,6 +396,7 @@
                         vm.score = -100;
                         vm.content = "You give up";
                         clearInterval(vm.timer);
+                        vm.flag = 1; //表明比赛已结束
                         vm.over = true;
                     });
                 },
@@ -397,6 +409,7 @@
                         vm.score = 0;
                         vm.content = "You have surrendered";
                         clearInterval(vm.timer);
+                        vm.flag = 1; //表明比赛已结束
                         vm.over = true;
 
                     });
@@ -413,6 +426,7 @@
                             vm.score = -100;
                             vm.content = "You don’t shoot correctly!";
                             clearInterval(vm.timer);
+                            vm.flag = 1; //表明比赛已结束
                             vm.over = true;
                         });
                     } else {
@@ -421,6 +435,7 @@
                             vm.score = 200;
                             vm.content = "Congratulation! you shoot correctly.";
                             clearInterval(vm.timer);
+                            vm.flag = 1; //表明比赛已结束
                             vm.over = true;
                         });
 
