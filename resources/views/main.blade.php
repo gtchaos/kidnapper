@@ -26,7 +26,7 @@
             <a target="_blank" href="http://laravel.com">Laravel</a> and <a target="_blank" href="https://vuejs.org">Vue</a>
         </p>
         <p class="text-center contact">
-            <a href="https://github.com/gtchaos/kidnapper"><i class="fa fa-github" aria-hidden="true"></i></a>
+            <a target="_blank" href="https://github.com/gtchaos/kidnapper"><i class="fa fa-github" aria-hidden="true"></i></a>
             &nbsp;&nbsp;
             <a target="_blank" href="https://plus.google.com/u/0/101933817543563295388"><i class="fa fa-google-plus-official" aria-hidden="true"></i></a>
         </p>
