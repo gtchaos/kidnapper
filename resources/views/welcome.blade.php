@@ -239,7 +239,7 @@
                     list: [],
                     timer: null,
                     reply: "",
-                    time: 10,
+                    time: 120,
                     score: 0,
                     content: "",
                     status: 0,
