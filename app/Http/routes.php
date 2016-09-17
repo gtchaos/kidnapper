@@ -19,7 +19,7 @@
 Route::resource('dialog','DialogController');
 
 Route::get('/', function () {
-    $teamName = Cache::get("teamName");
+    $teamName = Cookie::get("name");
     if (empty($teamName)) {
         return redirect('profile/create');
     }
