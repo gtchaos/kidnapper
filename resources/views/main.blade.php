@@ -23,7 +23,7 @@
     <div class="container">
         <p class="text-center">
             &copy;2016 &nbsp;Powered by
-            <a target="_blank" href="http://laravel.com">Laravel</a> and <a target="_blank" href="https://vuejs.org">Vue</a>
+            <a target="_blank" href="http://laravel.com">Laravel</a> and <a target="_blank" href="https://vuejs.org">Vue.js</a>
         </p>
         <p class="text-center contact">
             <a target="_blank" href="https://github.com/gtchaos/kidnapper"><i class="fa fa-github" aria-hidden="true"></i></a>

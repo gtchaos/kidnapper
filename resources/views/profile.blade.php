@@ -13,10 +13,10 @@
                     <div class="input-group">
                         <label class="sr-only" for="teamName">Team Name:</label>
                         <input type="text" class="form-control team-name" id="teamName" v-model="name"
-                               placeholder="Enter Your Team Name">
+                               placeholder="enter your team name">
                         <label class="sr-only" for="coins">Team Current Coins:</label>
                         <input type="text" class="form-control team-name" id="coins" v-model="score"
-                               placeholder="Enter Your Current Coins">
+                               placeholder="enter your initial coins">
                         <a v-on:click="createTeam" href="#" class="input-group-addon profile-submit">
                             <span>Submit</span>
                         </a>
@@ -34,7 +34,7 @@
                     <div class="input-group">
                         <label class="sr-only" for="oldTeamName">Team Name:</label>
                         <input type="text" class="form-control team-name" id="oldTeamName" v-model="oldName"
-                               placeholder="Enter Your Team Name">
+                               placeholder="enter your team name">
                         <a v-on:click="loginTeam" href="#" class="input-group-addon profile-submit">
                             <span>Login</span>
                         </a>
