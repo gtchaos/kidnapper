@@ -25,7 +25,7 @@
             <p class="role">Negotiator's Choices: <i class="fa fa-hand-o-down" aria-hidden="true"></i></p>
             <ul class="list-group" id="team">
                 <li class="list-group-item" v-for="(index, dialog) in list">
-                    <a id="selectA" class="select" v-on:click="updateDialog(dialog)">
+                    <a id="selectA" onclick="responsiveVoice.speak('');"  value="Play" class="select" v-on:click="updateDialog(dialog)">
                         <span>@{{index + 1}}. &nbsp;</span> @{{ dialog.word }}
                     </a>
                 </li>
@@ -310,13 +310,17 @@
                     if (responsiveVoice.isPlaying()) {
                         return false;
                     }
-                    speak(dialog.word);
+                    //  如果游戏还没结束
+                    if (vm.flag != 1) {
+                        speak(dialog.word);
+                    }
                     //查取绑匪的对话回复
                     vm.reply = "";
                     charIndex = -1;
                     stringLength = 0;
 
                     if (vm.flag  == 1) {
+                        responsiveVoice.cancel();
                         vm.content = "Game Over! Please refresh the current page and try it again";
                         vm.over = true;
                         return false;
