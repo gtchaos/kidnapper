@@ -103,9 +103,12 @@ a:hover {
     padding: 10px;
 }
 .login-tip {
-    padding: 20px 5px 0;
-    color: #ff7777;
+    padding-top: 20px;
+
     opacity: 0.7;
+}
+.login-tip i {
+    color: #ff7777;
 }
 .modal-body > ul > li {
     list-style-type: circle;

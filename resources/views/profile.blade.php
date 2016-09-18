@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-md-offset-3 col-md-6">
             <p class="login-tip">
-                If you first use it, please input your team's name and initial coins.
+                <i class="fa fa-hand-o-right" aria-hidden="true"></i>&nbsp;If you first use it, please input your team's name and initial coins.
             </p>
             <form role="form">
                 <div class="form-group">
@@ -25,7 +25,8 @@
             </form>
 
             <p class="login-tip">
-                If you have a group name, please login directly.
+                <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+                &nbsp;If you have a group name, please login directly.
             </p>
             <form role="form">
                 <div class="form-group">
