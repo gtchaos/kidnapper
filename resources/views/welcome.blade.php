@@ -207,12 +207,12 @@
             var nextFourChars = inputText.substr(charIndex, 4);
             if (nextFourChars == '<BR>' || nextFourChars == '<br>') {
                 theChar = '<BR>';
-                charIndex += 3;
+                charIndex = charIndex + 3;
             }
             initString = initString + theChar + "<SPAN id='blink'>_</SPAN>";
             document.getElementById('myContent').innerHTML = initString;
 
-            charIndex = charIndex / 1 + 1;
+            charIndex = charIndex + 1;
             if (charIndex % 2 == 1) {
                 document.getElementById('blink').style.display = 'none';
             } else {
@@ -289,7 +289,7 @@
                     if (vm.time == 0) {
                         recorder.update({id: vm.uid}, {score: -100}).then(function (response) {
                             // 响应成功回调
-                            vm.score += -100;
+                            vm.score = parseInt(vm.score) - 100;
                             vm.content = "TIME OUT";
                             vm.choose = false;
                             vm.show = false;
@@ -324,7 +324,7 @@
                     if (vm.time == 0) {
                         recorder.update({id: vm.uid}, {score: -100}).then(function (response) {
                             // 响应成功回调
-                            vm.score += -100;
+                            vm.score = parseInt(vm.score) - 100;
                             vm.content = "TIME OUT";
                             vm.flag = 1; //表明比赛已结束
                             vm.over = true;
@@ -345,64 +345,6 @@
                                             document.getElementById('myContent').innerHTML = '';
                                             writeContent(true);
                                         }, 300);
-                                        setTimeout(function () {
-                                            //每隔2--毫秒检测是否还有人在说话,没有人说话,继续
-                                            var str = setInterval(function() {
-                                                if(!responsiveVoice.isPlaying()){
-                                                    // st = 0 继续谈判
-                                                    if (vm.status == 0) {
-                                                        setTimeout(function () {
-                                                            //谈判者继续对话
-                                                            negotiator.get({id: dialog.word_id}).then(function (response) {
-                                                                vm.list = response.body;
-                                                            });
-                                                        }, 1000);
-                                                    }
-                                                    // st = 1 选择 treasure or partner
-                                                    if (vm.status == 1) {
-                                                        vm.show = true;
-                                                    }
-                                                    // st = 2 big success
-                                                    if (vm.status == 2) {
-                                                        recorder.update({id: vm.uid}, {score: 400}).then(function (response) {
-                                                            // 响应成功回调
-                                                            vm.score += 400;
-                                                            vm.content = "BIG SUCCESS";
-                                                            clearInterval(vm.timer);
-                                                            vm.flag = 1; //表明比赛已结束
-                                                            vm.over = true;
-
-                                                        });
-                                                    }
-                                                    // st = 3 shoot or not
-                                                    if (vm.status == 3) {
-                                                        vm.shoot = true;
-                                                    }
-                                                    // st = 4 直接kill the 人质
-                                                    if (vm.status == 4) {
-                                                        recorder.update({id: vm.uid}, {score: -200}).then(function (response) {
-                                                            // 响应成功回调
-                                                            vm.score += -200;
-                                                            vm.content = "the kidnapper killed your partner.";
-                                                            clearInterval(vm.timer);
-                                                            vm.flag = 1; //表明比赛已结束
-                                                            vm.over = true;
-                                                        });
-                                                    }
-                                                    if (vm.status == 5) {
-                                                        recorder.update({id: vm.uid}, {score: 0}).then(function (response) {
-                                                            // 响应成功回调
-                                                            vm.score += 0;
-                                                            vm.content = "You have nothing in it";
-                                                            clearInterval(vm.timer);
-                                                            vm.flag = 1; //表明比赛已结束
-                                                            vm.over = true;
-                                                        });
-                                                    }
-                                                    clearInterval(str);
-                                                }
-                                            },100);
-                                        }, 3000);
 
                                         clearInterval(stl);
                                     }
@@ -410,8 +352,65 @@
                             }, 3000);
                         }
 
-//                        setTimeout(function(){
-//                        }, 3000);
+                        // 根据谈判者先前不同的选项,做出不同的回应
+                        setTimeout(function () {
+                            //每隔2--毫秒检测是否还有人在说话,没有人说话,继续
+                            var str = setInterval(function() {
+                                if(!responsiveVoice.isPlaying()){
+                                    // st = 0 继续谈判
+                                    if (vm.status == 0) {
+                                        setTimeout(function () {
+                                            //谈判者继续对话
+                                            negotiator.get({id: dialog.word_id}).then(function (response) {
+                                                vm.list = response.body;
+                                            });
+                                        }, 1000);
+                                    }
+                                    // st = 1 选择 treasure or partner
+                                    if (vm.status == 1) {
+                                        vm.show = true;
+                                    }
+                                    // st = 2 big success
+                                    if (vm.status == 2) {
+                                        recorder.update({id: vm.uid}, {score: 400}).then(function (response) {
+                                            // 响应成功回调
+                                            vm.score = parseInt(vm.score) + 400;
+                                            vm.content = "BIG SUCCESS";
+                                            clearInterval(vm.timer);
+                                            vm.flag = 1; //表明比赛已结束
+                                            vm.over = true;
+
+                                        });
+                                    }
+                                    // st = 3 shoot or not
+                                    if (vm.status == 3) {
+                                        vm.shoot = true;
+                                    }
+                                    // st = 4 直接kill the 人质
+                                    if (vm.status == 4) {
+                                        recorder.update({id: vm.uid}, {score: -200}).then(function (response) {
+                                            // 响应成功回调
+                                            vm.score = parseInt(vm.score) - 200;
+                                            vm.content = "the kidnapper killed your partner.";
+                                            clearInterval(vm.timer);
+                                            vm.flag = 1; //表明比赛已结束
+                                            vm.over = true;
+                                        });
+                                    }
+                                    if (vm.status == 5) {
+                                        recorder.update({id: vm.uid}, {score: 0}).then(function (response) {
+                                            // 响应成功回调
+                                            vm.score = parseInt(vm.score);
+                                            vm.content = "You have nothing in it";
+                                            clearInterval(vm.timer);
+                                            vm.flag = 1; //表明比赛已结束
+                                            vm.over = true;
+                                        });
+                                    }
+                                    clearInterval(str);
+                                }
+                            },100);
+                        }, 5000);
 
 
                     });
@@ -433,7 +432,7 @@
                     vm.keep = false;
                     recorder.update({id: vm.uid}, {score: -200}).then(function (response) {
                         // 响应成功回调
-                        vm.score += -200;
+                        vm.score = parseInt(vm.score) - 200;
                         vm.content = "You give up";
                         clearInterval(vm.timer);
                         vm.flag = 1; //表明比赛已结束
@@ -444,18 +443,17 @@
                     var vm = this;
                     vm.show = false;
                     vm.choose = false;
-                    var t_score = 0;
                     if (vm.score > 0) {
-                        t_score = - vm.score;
+                        vm.score = -vm.score;
                     } else {
                         vm.content = "You have no more coins! Sorry, you have to choose the other one";
                         vm.choose = true;
-                        return;
+                        return false;
                     }
 
-                    recorder.update({id: vm.uid}, {score: t_score}).then(function (response) {
+                    recorder.update({id: vm.uid}, {score: vm.score}).then(function (response) {
                         // 响应成功回调
-                        vm.score += t_score;
+                        vm.score = parseInt(vm.score) + parseInt(vm.score);
                         vm.content = "You have surrendered";
                         clearInterval(vm.timer);
                         vm.flag = 1; //表明比赛已结束
@@ -472,7 +470,7 @@
                     if (Math.random() < 0.5) {
                         recorder.update({id: vm.uid}, {score: -400}).then(function (response) {
                             // 响应成功回调
-                            vm.score += -400;
+                            vm.score = parseInt(vm.score) - 400;
                             vm.content = "You don’t shoot correctly!";
                             clearInterval(vm.timer);
                             vm.flag = 1; //表明比赛已结束
@@ -481,7 +479,7 @@
                     } else {
                         recorder.update({id: vm.uid}, {score: 200}).then(function (response) {
                             // 响应成功回调
-                            vm.score += 200;
+                            vm.score = parseInt(vm.score) + 200;
                             vm.content = "Congratulation! you shoot correctly.";
                             clearInterval(vm.timer);
                             vm.flag = 1; //表明比赛已结束
