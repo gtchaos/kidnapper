@@ -402,7 +402,10 @@
                                         });
                                     }
                                     if (vm.status == 5) {
-                                        recorder.update({id: vm.uid}, {score: 0}).then(function (response) {
+                                        if (parseInt(vm.score) > 0) {
+                                            vm.score = -vm.score;
+                                        }
+                                        recorder.update({id: vm.uid}, {score: vm.score}).then(function (response) {
                                             // 响应成功回调
                                             vm.score = parseInt(vm.score);
                                             vm.content = "You have nothing in it";
