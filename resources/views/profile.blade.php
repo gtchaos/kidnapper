@@ -4,6 +4,9 @@
 
     <div class="row">
         <div class="col-md-offset-3 col-md-6">
+            <p class="login-tip">
+                If you first use it, please input your team's name and initial coins.
+            </p>
             <form role="form">
                 <div class="form-group">
 
@@ -20,6 +23,24 @@
                     </div>
                 </div>
             </form>
+
+            <p class="login-tip">
+                If you have a group name, please login directly.
+            </p>
+            <form role="form">
+                <div class="form-group">
+
+                    <div class="input-group">
+                        <label class="sr-only" for="oldTeamName">Team Name:</label>
+                        <input type="text" class="form-control team-name" id="oldTeamName" v-model="oldName"
+                               placeholder="Enter Your Team Name">
+                        <a v-on:click="loginTeam" href="#" class="input-group-addon profile-submit">
+                            <span>Login</span>
+                        </a>
+                    </div>
+                </div>
+            </form>
+
         </div>
     </div>
     <div class="row">
@@ -74,6 +95,7 @@
             el: 'body',
             data: {
                 name: null,
+                oldName: null,
                 score: null,
                 showRight: false,
                 showFalse: false,
@@ -110,6 +132,31 @@
                                 });
                     }
 
+                },
+                loginTeam: function (e) {
+                    var vm = this;
+                    e.preventDefault();
+                    if (vm.oldName) {
+                        vm.$http.post("/api/login", {oldName: vm.oldName})
+                                .then(function (response) {
+
+                                    if (response.body.ret == 200) {
+                                        a = "{{URL::to("dialog")}}";
+                                        vm.showRight = true;
+                                        vm.message = 'login successfully!';
+                                        setTimeout(function () {
+                                            window.location.href = a;
+                                        }, 2000);
+
+                                    } else {
+                                        vm.message = 'Oops.. ' + response.body.retMsg;
+                                        vm.showFalse = true;
+                                    }
+
+                                }, function (response) {
+                                    // error handle
+                                });
+                    }
                 }
             }
         })

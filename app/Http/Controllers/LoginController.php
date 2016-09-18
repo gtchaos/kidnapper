@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Cache;
-use DB;
+use Cookie;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Redirect;
 
-class DialogController extends Controller
+class LoginController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,16 +16,7 @@ class DialogController extends Controller
      */
     public function index()
     {
-        $teamName = Cookie::get("name");
-        if (empty($teamName)) {
-            return redirect('profile/create');
-        }
-        if(strlen($teamName) > 8) {
-            $teamName = mb_substr($teamName, 0, 8, 'utf-8') . '...';
-        }
-        return view('welcome', ['teamName' => $teamName]);
-
-
+        //
     }
 
     /**
@@ -44,36 +32,51 @@ class DialogController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
+        $teamName = trim($request->get("oldName"));
+        try {
+            $ret = \App\Group::where('name', $teamName)->first();
+            if(!empty($ret->id)) {
+                $cookie = Cookie::make('name', $teamName, 60);
+                return \Response::json([
+                    'ret' => 200,
+                    'retMsg' => 'login success'
+                ])->withCookie($cookie);
+            } else {
+                return \Response::json([
+                    'ret' => 500,
+                    'retMsg' => 'name not exists'
+                ]);
+            }
+
+        } catch (\PDOException $e) {
+            \Log::error("login failed" . $e);
+            return \Response::json([
+                'ret' => 500,
+                'retMsg' => 'login failed, perhaps the team name not exist.'
+            ]);
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $sourceId = $id;
-        $res = DB::table('relations')->where('source_id', $sourceId)->get();
-        foreach ($res as &$item) {
-            if (!empty($item->word_id)) {
-                $item->word = DB::table('negotiators')->where('id', $item->word_id)->value('word');
-            }
-        }
-        return $res;
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -84,8 +87,8 @@ class DialogController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -96,7 +99,7 @@ class DialogController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

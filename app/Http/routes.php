@@ -23,8 +23,8 @@ Route::get('/', function () {
     if (empty($teamName)) {
         return redirect('profile/create');
     }
-    if(strlen($teamName) > 5) {
-        $teamName = mb_substr($teamName, 0, 5, 'utf-8') . '...';
+    if(strlen($teamName) > 8) {
+        $teamName = mb_substr($teamName, 0, 8, 'utf-8') . '...';
     }
     return view('welcome', ['teamName' => $teamName]);
 });
@@ -50,3 +50,4 @@ Route::get('api/dialog/{id}', function($id) {
 });
 
 Route::resource('group/score','ScoreController');
+Route::resource('api/login','LoginController');
