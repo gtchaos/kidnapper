@@ -379,7 +379,7 @@
                                         recorder.update({id: vm.uid}, {score: 400}).then(function (response) {
                                             // 响应成功回调
                                             vm.score = parseInt(vm.score) + 400;
-                                            vm.content = "BIG SUCCESS";
+                                            vm.content = "Big success! You have saved partner successfully.";
                                             clearInterval(vm.timer);
                                             vm.flag = 1; //表明比赛已结束
                                             vm.over = true;

@@ -34,14 +34,10 @@
                 Story:
             </h3>
             <p>
-                Your team member is kidnapped by one local aboriginal. Since he considers that your team has robbed the
-                resources and land. He wants to warn you and take a revenge.
-
+                Your team member is kidnapped by one local aboriginal. Since he considers that your team has robbed the resources and land. He wants to warn you and take a revenge.
             </p>
             <p>
-                A negotiator is more than a guy who knows how to talk.He is a specialist and a perceiver,a soldier who
-                needs words than guns to fight his battles.
-
+                A negotiator is more than a guy who knows how to talk.He is a specialist and a perceiver,a soldier who needs words than guns to fight his battles.
             </p>
             <h3>
                 Warning:
