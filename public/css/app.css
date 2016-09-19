@@ -76,6 +76,19 @@ a:hover {
     font-size: 20px;
     color: #00FF00;
 }
+.btn-rounded {
+    font-weight: 700;
+    width:60px;
+    height: 60px;
+    padding:12px;
+    -moz-border-radius: 50%; /* Firefox */
+  -webkit-border-radius: 50%; /* Safari 和 Chrome */
+  border-radius: 50%; /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
+      border-width: 3px;
+       -moz-box-shadow: 0 0 2px #666;
+  -webkit-box-shadow: 0 0 2px #666;
+    box-shadow: 0 0 2px #666;
+}
 #blink{
     display:inline;
 }

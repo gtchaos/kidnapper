@@ -41,6 +41,7 @@
                 <p class="score"><span>@{{ score }}</span></p>
                 Count Down: <br>
                 <p class="time"><span> @{{ time }}"</span></p>
+                <button class="btn btn-default btn-rounded" onclick="responsiveVoice.speak('');" value="Play" @click="onPlay">Play</button>
             </div>
 
 
@@ -185,8 +186,7 @@
                 responsiveVoice.speak(content);
             }, 100);
         }
-        //预加载音源，防止点击无声音
-        speak('');
+        
         var charIndex = -1;
         var stringLength = 0;
         var inputText;
@@ -254,6 +254,7 @@
                     timer: null,
                     reply: "",
                     time: 120,
+                    play: false,
                     score: 0,
                     content: "",
                     status: 0,
@@ -282,30 +283,42 @@
                 }, function (response) {
                     // 响应错误回调
                 });
-                // 2分钟倒计时开始
-                vm.timer = setInterval(function () {
-                    vm.time--;
-                    if (vm.time == 0) {
-                        recorder.update({id: vm.uid}, {score: -100}).then(function (response) {
-                            // 响应成功回调
-                            vm.score = parseInt(vm.score) - 100;
-                            vm.content = "TIME OUT";
-                            vm.choose = false;
-                            vm.show = false;
-                            vm.shoot = false;
-                            vm.keep = false;
-                            vm.over = true;
-                        });
-                        clearInterval(vm.timer);
-                        return false;
-                    }
-                }, 1000)
+       
 
 
             },
             methods: {
+                onPlay: function() {
+                    var vm = this;
+                    // 2分钟倒计时开始
+                    if (vm.play) {
+                        return false;
+                    }
+                    vm.timer = setInterval(function () {
+                        vm.time--;
+                        if (vm.time == 0) {
+                            recorder.update({id: vm.uid}, {score: -100}).then(function (response) {
+                                // 响应成功回调
+                                vm.score = parseInt(vm.score) - 100;
+                                vm.content = "TIME OUT";
+                                vm.choose = false;
+                                vm.show = false;
+                                vm.shoot = false;
+                                vm.keep = false;
+                                vm.over = true;
+                            });
+                            clearInterval(vm.timer);
+                            return false;
+                        }
+                    }, 1000)
+                    vm.play = true;
+
+                },
                 updateDialog: function (dialog) {
                     var vm = this;
+                    if(!vm.play) {
+                        return false;
+                    } 
                     if (responsiveVoice.isPlaying()) {
                         return false;
                     }
@@ -357,7 +370,7 @@
 
                         // 根据谈判者先前不同的选项,做出不同的回应
                         setTimeout(function () {
-                            //每隔2--毫秒检测是否还有人在说话,没有人说话,继续
+                            //每隔100毫秒检测是否还有人在说话,没有人说话,继续
                             var str = setInterval(function() {
                                 if(!responsiveVoice.isPlaying()){
                                     // st = 0 继续谈判
