@@ -25,7 +25,7 @@
             <p class="role">Negotiator's Choices: <i class="fa fa-hand-o-down" aria-hidden="true"></i></p>
             <ul class="list-group" id="team">
                 <li class="list-group-item" v-for="(index, dialog) in list">
-                    <a id="selectA" onclick="responsiveVoice.speak('');"  value="Play" class="select" v-on:click="updateDialog(dialog)">
+                    <a id="selectA" class="select" v-on:click="updateDialog(dialog)">
                         <span>@{{index + 1}}. &nbsp;</span> @{{ dialog.word }}
                     </a>
                 </li>
@@ -67,8 +67,7 @@
                     </li>
                     <li>But you have only one shot left!
                     </li>
-                    <li>The bullet rate is 50%. If you shoot correctly,you get 400 coins. If you don’t shoot correctly,
-                        the kidnapper will kill your partner directly, you lose 400 coins.
+                    <li><span style="color:red;">The bullet rate is 50%. If you shoot correctly,you get 400 coins. If you don’t shoot correctly, the kidnapper will kill your partner directly, you lose 400 coins.</span>
                     </li>
                 </ul>
 
@@ -105,8 +104,7 @@
             <div slot="modal-body" class="modal-body">
                 <ul>
                     <li> You have only one shot left!</li>
-                    <li> The bullet rate is 50%. If you shoot correctly, you get 400 coins. If you don’t shoot
-                        correctly, the kidnapper will kill your partner directly, you will lose 400 coins.
+                    <li> <span style="color:red;">The bullet rate is 50%. If you shoot correctly, you get 400 coins. If you don’t shoot correctly, the kidnapper will kill your partner directly, you will lose 400 coins. </span>
                     </li>
                     <li> Or you give up saving your partner and go away, you loose 200 coins.
                     </li>
@@ -187,7 +185,8 @@
                 responsiveVoice.speak(content);
             }, 100);
         }
-
+        //预加载音源，防止点击无声音
+        speak('');
         var charIndex = -1;
         var stringLength = 0;
         var inputText;
@@ -326,9 +325,9 @@
                         return false;
                     }
                     if (vm.time == 0) {
-                        recorder.update({id: vm.uid}, {score: -100}).then(function (response) {
+                        recorder.update({id: vm.uid}, {score: -200}).then(function (response) {
                             // 响应成功回调
-                            vm.score = parseInt(vm.score) - 100;
+                            vm.score = parseInt(vm.score) - 200;
                             vm.content = "TIME OUT";
                             vm.flag = 1; //表明比赛已结束
                             vm.over = true;

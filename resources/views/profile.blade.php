@@ -64,9 +64,11 @@
             <h3>
                 Warning:
             </h3>
-            <p>
-                Choose your words very carefully.
+            <p>Your partner is always important!If your partner dies, you’ll lose 200 golden coins in value. 
             </p>
+            <p>The game time is limited in 2 minutes. If you haven’t finished it in 2 minutes, the game is over and you’ll lose 200 golden coins.</p>
+            <p>Choose your words very carefully.</p>
+            
 
         </div>
     </div>

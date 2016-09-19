@@ -35,9 +35,9 @@
     </div>
 </footer>
 
-<script src="http://cdn.bootcss.com/vue/1.0.26/vue.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.0.2/vue-resource.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-strap/1.1.20/vue-strap.min.js"></script>
+<script src="{{asset('js/vue.min.js')}}"></script>
+<script src="{{asset('js/vue-resource.min.js')}}"></script>
+<script src="{{asset('js/vue-strap.min.js')}}"></script>
 <script src="{{asset('js/responsivevoice.src.js')}}"></script>
 @yield('scripts')
 </body>
