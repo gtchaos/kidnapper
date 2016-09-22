@@ -51,3 +51,7 @@ Route::get('api/dialog/{id}', function($id) {
 
 Route::resource('group/score','ScoreController');
 Route::resource('api/login','LoginController');
+
+Route::get('test', function () {
+    return view('test');
+});

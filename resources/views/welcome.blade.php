@@ -1,5 +1,10 @@
 @extends('main')
 @section('content')
+    <div id="musicControl">
+        <a v-bind:class="{ 'on': on, 'stop': stop }" v-on:click="musicPlay">
+            <audio  id="player" src="{{asset("audios/jm-theme.mp3")}}" loop="loop" autoplay></audio>
+        </a>
+    </div>
     <h1 class="text-center title" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">Negotiate With The Kidnapper</h1>
     <div class="row">
         <div class="col-md-6">
@@ -20,18 +25,17 @@
     <div class="row">
         <dialog-app></dialog-app>
     </div>
-    <template id='dialog-template'>
-        <div class="col-md-5">
-            <p class="role">Negotiator's Choices: <i class="fa fa-hand-o-down" aria-hidden="true"></i></p>
-            <ul class="list-group" id="team">
-                <li class="list-group-item" v-for="(index, dialog) in list">
-                    <a id="selectA" class="select" v-on:click="updateDialog(dialog)">
-                        <span>@{{index + 1}}. &nbsp;</span> @{{ dialog.word }}
-                    </a>
-                </li>
-            </ul>
+    <div class="container">
+        <div class="pic">
         </div>
+    </div>
+    <template id='dialog-template'>
 
+        <div class="col-md-5">
+            <p class="role">Kidnapper's Reply:</p>
+            <div id="myContent"></div>
+            <p id="kidnapper" style="display:none"> @{{ reply }} </p>
+        </div>
         {{--<div class="col-md-5">--}}
         {{--<dialog-app list="{{ $dialogs }}"></dialog-app>--}}
         {{--</div>--}}
@@ -43,13 +47,17 @@
                 <p class="time"><span> @{{ time }}"</span></p>
                 <button class="btn btn-default btn-rounded" onclick="responsiveVoice.speak('');" value="Play" @click="onPlay">Play</button>
             </div>
-
-
         </div>
+
         <div class="col-md-5">
-            <p class="role">Kidnapper's Reply:</p>
-            <div id="myContent"></div>
-            <p id="kidnapper" style="display:none"> @{{ reply }} </p>
+            <p class="role">Negotiator's Choices: <i class="fa fa-hand-o-down" aria-hidden="true"></i></p>
+            <ul class="list-group" id="team">
+                <li class="list-group-item" v-for="(index, dialog) in list">
+                    <a id="selectA" class="select" v-on:click="updateDialog(dialog)">
+                        <span>@{{index + 1}}. &nbsp;</span> @{{ dialog.word }}
+                    </a>
+                </li>
+            </ul>
         </div>
 
 
@@ -75,13 +83,13 @@
             </div>
             <div slot="modal-footer" class="modal-footer footer-align shoot-footer">
                 <button type="button" class="btn btn-default left" @click="keepTreasure">Keep Treasure</button>
-                <button type="button" class="btn btn-success right" @click="surrender">Give up Treasure</button>
+                <button type="button" class="btn btn-success right" @click="surrenderOther">Give up Treasure</button>
             </div>
         </modal>
 
         <modal title="game over" small :show.sync="over" backdrop="false" effect="fade" width="400">
             <div slot="modal-header" class="modal-header over-header">
-                <button type="button"  onclick="responsiveVoice.cancel();"  value="Play" class="close" @click="over = false"><span>×</span></button>
+                <button type="button" onclick="responsiveVoice.cancel();"  value="Play" class="close" @click="over = false"><span>×</span></button>
                 <h5 class="modal-title">
                     The Game Results
                 </h5>
@@ -297,9 +305,9 @@
                     vm.timer = setInterval(function () {
                         vm.time--;
                         if (vm.time == 0) {
-                            recorder.update({id: vm.uid}, {score: -100}).then(function (response) {
+                            recorder.update({id: vm.uid}, {score: -200}).then(function (response) {
                                 // 响应成功回调
-                                vm.score = parseInt(vm.score) - 100;
+                                vm.score = parseInt(vm.score) - 200;
                                 vm.content = "TIME OUT";
                                 vm.choose = false;
                                 vm.show = false;
@@ -319,9 +327,7 @@
                     if(!vm.play) {
                         return false;
                     } 
-                    if (responsiveVoice.isPlaying()) {
-                        return false;
-                    }
+                   
                     //  如果游戏还没结束
                     if (vm.flag != 1) {
                         speak(dialog.word);
@@ -368,71 +374,72 @@
                             }, 3000);
                         }
 
-                        // 根据谈判者先前不同的选项,做出不同的回应
-                        setTimeout(function () {
-                            //每隔100毫秒检测是否还有人在说话,没有人说话,继续
-                            var str = setInterval(function() {
-                                if(!responsiveVoice.isPlaying()){
-                                    // st = 0 继续谈判
-                                    if (vm.status == 0) {
-                                        setTimeout(function () {
-                                            //谈判者继续对话
-                                            negotiator.get({id: dialog.word_id}).then(function (response) {
-                                                vm.list = response.body;
-                                            });
-                                        }, 1000);
-                                    }
-                                    // st = 1 选择 treasure or partner
-                                    if (vm.status == 1) {
-                                        vm.show = true;
-                                    }
-                                    // st = 2 big success
-                                    if (vm.status == 2) {
-                                        recorder.update({id: vm.uid}, {score: 400}).then(function (response) {
-                                            // 响应成功回调
-                                            vm.score = parseInt(vm.score) + 400;
-                                            vm.content = "Big success! You have saved your partner successfully.";
-                                            clearInterval(vm.timer);
-                                            vm.flag = 1; //表明比赛已结束
-                                            vm.over = true;
-
-                                        });
-                                    }
-                                    // st = 3 shoot or not
-                                    if (vm.status == 3) {
-                                        vm.shoot = true;
-                                    }
-                                    // st = 4 直接kill the 人质
-                                    if (vm.status == 4) {
-                                        recorder.update({id: vm.uid}, {score: -200}).then(function (response) {
-                                            // 响应成功回调
-                                            vm.score = parseInt(vm.score) - 200;
-                                            vm.content = "the kidnapper killed your partner.";
-                                            clearInterval(vm.timer);
-                                            vm.flag = 1; //表明比赛已结束
-                                            vm.over = true;
-                                        });
-                                    }
-                                    if (vm.status == 5) {
-                                        if (parseInt(vm.score) > 0) {
-                                            vm.score = -vm.score;
-                                        }
-                                        recorder.update({id: vm.uid}, {score: vm.score}).then(function (response) {
-                                            // 响应成功回调
-                                            vm.score = parseInt(vm.score);
-                                            vm.content = "You have nothing in it";
-                                            clearInterval(vm.timer);
-                                            vm.flag = 1; //表明比赛已结束
-                                            vm.over = true;
-                                        });
-                                    }
-                                    clearInterval(str);
-                                }
-                            },100);
-                        }, 5000);
-
 
                     });
+
+                    // 根据谈判者先前不同的选项,做出不同的回应
+                    setTimeout(function () {
+                        //每隔100毫秒检测是否还有人在说话,没有人说话,继续
+                        var str = setInterval(function() {
+                                if(!responsiveVoice.isPlaying()){
+                                // st = 0 继续谈判
+                                if (vm.status == 0) {
+                                    setTimeout(function () {
+                                        //谈判者继续对话
+                                        negotiator.get({id: dialog.word_id}).then(function (response) {
+                                            vm.list = response.body;
+                                        });
+                                    }, 1000);
+                                }
+                                // st = 1 选择 treasure or partner
+                                if (vm.status == 1) {
+                                    vm.show = true;
+                                }
+                                // st = 2 big success
+                                if (vm.status == 2) {
+                                    recorder.update({id: vm.uid}, {score: 400}).then(function (response) {
+                                        // 响应成功回调
+                                        vm.score = parseInt(vm.score) + 400;
+                                        vm.content = "Big success! You have saved your partner successfully.";
+                                        clearInterval(vm.timer);
+                                        vm.flag = 1; //表明比赛已结束
+                                        vm.over = true;
+
+                                    });
+                                }
+                                // st = 3 shoot or not
+                                if (vm.status == 3) {
+                                    vm.shoot = true;
+                                }
+                                // st = 4 直接kill the 人质
+                                if (vm.status == 4) {
+                                    recorder.update({id: vm.uid}, {score: -200}).then(function (response) {
+                                        // 响应成功回调
+                                        vm.score = parseInt(vm.score) - 200;
+                                        vm.content = "the kidnapper killed your partner.";
+                                        clearInterval(vm.timer);
+                                        vm.flag = 1; //表明比赛已结束
+                                        vm.over = true;
+                                    });
+                                }
+                                if (vm.status == 5) {
+                                    if (parseInt(vm.score) > 0) {
+                                        vm.score = -vm.score;
+                                    }
+                                    recorder.update({id: vm.uid}, {score: vm.score}).then(function (response) {
+                                        // 响应成功回调
+                                        vm.score = parseInt(vm.score) > 0 ? 0 :  2*parseInt(vm.score);
+                                        vm.content = "You have nothing in it";
+                                        clearInterval(vm.timer);
+                                        vm.flag = 1; //表明比赛已结束
+                                        vm.over = true;
+                                    });
+                                }
+                                clearInterval(str);
+                            }
+                            },100);
+                        }, 6000);
+
 
                 },
                 keepTreasure: function () {
@@ -481,6 +488,28 @@
                     });
 
                 },
+                surrenderOther: function() {
+                    var vm = this;
+                    vm.show = false;
+                    vm.choose = false;
+                    if (vm.score > 0) {
+                        vm.score = -vm.score;
+                    } else {
+                        vm.content = "You have no more coins! Sorry, you have to choose the other one";
+                        vm.show = true;
+                        return false;
+                    }
+
+                    recorder.update({id: vm.uid}, {score: vm.score}).then(function (response) {
+                        // 响应成功回调
+                        vm.score = parseInt(vm.score) + parseInt(vm.score);
+                        vm.content = "You have surrendered";
+                        clearInterval(vm.timer);
+                        vm.flag = 1; //表明比赛已结束
+                        vm.over = true;
+
+                    });
+                },
                 shootKidnapper: function () {
                     var vm = this;
                     vm.shoot = false;
@@ -508,6 +537,7 @@
                     }
 
                 }
+
             },
             computed: {
                 square: function () {
@@ -518,7 +548,31 @@
 
 
         new Vue({
-            el: 'body'
+            el: 'body',
+            data: {
+                on: true,
+                stop: false,
+                sts: 0
+            },
+            methods:{
+                musicPlay: function() {
+                    var vm = this;
+                    var audio = document.getElementById("player");
+                        if (vm.sts ==0) {
+                            audio.pause();
+                            vm.stop = true;
+                            vm.on = false;
+                            vm.sts = 1;
+                        } else {
+                            audio.play();
+                            vm.stop = false;
+                            vm.on = true;
+                            vm.sts = 0;
+                        }
+
+
+                }
+            }
         });
 
     </script>

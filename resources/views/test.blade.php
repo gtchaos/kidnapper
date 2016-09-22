@@ -43,47 +43,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.0.2/vue-resource.min.js"></script>
 <script src="{{ asset("js/vue-strap.min.js") }}"></script>
 <script type="text/javascript">
-    Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('#token').getAttribute('content');
 
-    new Vue({
-        components: {
-            'alert': VueStrap.alert
-        },
-        el: '#team-post',
-        data: {
-            name: null,
-            showRight: false,
-            showFalse: false,
-            message: null
-        },
-        methods: {
-            createTeam: function () {
-                var vm = this;
-                if (vm.name) {
-                    vm.$http.post("/profile", {name: vm.name})
-                            .then(function (response) {
-
-                                if (response.body.ret == 200) {
-                                    a = "{{URL::to("dialog/index")}}";
-                                    vm.showRight = true;
-                                    vm.message = 'create your team successfully!';
-                                    setTimeout(function(){
-                                        window.location.href = a;
-                                    }, 2000);
-
-                                } else {
-                                    vm.message = 'Oops.. ' + response.body.retMsg;
-                                    vm.showFalse = true;
-                                }
-
-                            }, function (response) {
-                                // error handle
-                            });
-                }
-
-            }
-        }
-    })
 
 
 </script>
