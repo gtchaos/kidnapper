@@ -111,6 +111,7 @@
                 </h2>
             </div>
             <div slot="modal-body" class="modal-body">
+                <p style="color:red; font-weight: 700;">The kidnapper is preparing to kill your partner.</p>
                 <ul>
                     <li> You have only one shot left!</li>
                     <li> <span style="color:red;">The bullet rate is 50%. If you shoot correctly, you get 400 coins. If you don’t shoot correctly, the kidnapper will kill your partner directly, you will lose 400 coins. </span>
@@ -409,7 +410,9 @@
                                 }
                                 // st = 3 shoot or not
                                 if (vm.status == 3) {
-                                    vm.shoot = true;
+                                    setTimeout(function(){
+                                        vm.shoot = true;
+                                    }, 2000);
                                 }
                                 // st = 4 直接kill the 人质
                                 if (vm.status == 4) {
